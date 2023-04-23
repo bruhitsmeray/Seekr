@@ -1,29 +1,27 @@
-const client = require("../index");
-const { ChatInputCommandInteraction, Message, SlashCommandBuilder } = require("discord.js");
+const {Client, Message} = require('discord.js');
 
 module.exports = {
-    data: new SlashCommandBuilder()
-        .setName('clear')
-        .setDescription('Clears the specified number of messages.')
-            .addIntegerOption(option => option.setName('messages')
-            .setDescription('Number of messages to delete')
-            .setMinValue(1)
-            .setMaxValue(100)
-            .setRequired(true)),
-        /**
-        * @param {ChatInputCommandInteraction} interaction
-        */
-    async execute(interaction, message){
-        // try{
-        //     await message.channel.bulkDelete(parseInt(interaction.options.get("messages").value) + 1, true);
-        //     console.warn(`${message.author.username} deleted ${interaction.options.get("messages").value} messages in ${message.guild.name}.`);
-        // } catch (error) {
-        //     console.error(error);
-        // };
-        interaction.reply({
-            // content: `${interaction.options.get("messages").value}` + ' ' + 'messages have been deleted.',
-            content: '\`This command has not yet been implemented. Please check with the developer on it\'s status!\`',
-            ephemeral: true
-        });
+    name: 'clear',
+    aliases: ['cl'],
+    /**
+     * @param {Client} client
+     * @param {Message} message
+     * @param {String[]} args
+     */
+    run: async (client, message, args) => {
+        try{
+            let amount = args[0];
+            if (!amount)
+                return message.channel.send(`\`${message.author.username}\`` + ' : ' + `\`please provide an amount.\``);
+            if (isNaN(amount) || parseInt(amount <= 0))
+                return message.channel.send(`\`${message.author.username}\`` + ' : ' + `\`please provide a valid number.\``);
+            if (parseInt(amount) > 100)
+                return message.channel.send(`\`${message.author.username}\`` + ' : ' + `\`you can't delete 100 messages at once.\``);
+    
+            await message.channel.bulkDelete(parseInt(amount) + 1, true);
+            console.warn('SYSTEM:' + ' ' + `${message.author.username} deleted ${amount} messages in ${message.guild.name}.`);
+        } catch (error) {
+            console.error(error);
+        };
     }
 };

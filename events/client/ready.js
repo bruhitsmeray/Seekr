@@ -1,12 +1,12 @@
 const client = require("../../index.js");
-const { loadCommands } = require("../../systems/cmdHandler.js");
+const { loadSlashCommands } = require("../../systems/slashHandler.js");
 
 module.exports = {
     name: 'Ready',
 };
 
 client.on('ready', () => {
-    loadCommands(client);
+    loadSlashCommands(client);
     console.log(`${client.user.username}` + ' ' + 'successfully logged in.');
     client.user.setActivity(`on ${client.guilds.cache.size} server(s).`);
 });
